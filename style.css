@@ -64,7 +64,7 @@ font-size: 16px;
 #main-container {
   padding: 40px;
   padding-top:80px;
-  
+
 }
 @media (max-width:576px){
   #main-container{
@@ -99,7 +99,7 @@ font-size: 16px;
   transform: translate(0, -33%);
 }
 .h1Wrapper h3{
-  transform: translate(0, -33%);
+
 }
 .h2Wrapper{
   width: 80%;
@@ -198,7 +198,7 @@ padding-left: 30px;
 }
 .irs-grid-pol.small{
   display: none;
-}  
+}
 footer{
   background-color: #14263E;
 }
@@ -291,7 +291,7 @@ tr{
 
 body {
   font-family: sans-serif;
-  
+
   border-top: 12px solid #14263E;
 }
 
@@ -372,7 +372,7 @@ path.slice {
 }
 
 .edit {
-  
+
   text-align: center;
   background-size: cover;
   color: white;
