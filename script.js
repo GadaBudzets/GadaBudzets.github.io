@@ -213,9 +213,9 @@ function init() {
               changeValuesReal()
             },
             onStart: function () {
-                setTimeout(() => {
-                    changeValuesReal()
-                }, 500);
+                // setTimeout(() => {
+                //     changeValuesReal()
+                // }, 500);
 
             },
         });
