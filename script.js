@@ -124,6 +124,9 @@ $(document).ready(function () {
         $(".labels").css('transform', 'scale(' + 1 + ')');
         $(".lines").css('transform', 'scale(' + 1 + ')');
     }
+    setTimeout(() => {
+        changeValuesReal()
+    }, 500);
 });
 
 // initialize the sliders, events and pie chart
@@ -213,9 +216,7 @@ function init() {
               changeValuesReal()
             },
             onStart: function () {
-                // setTimeout(() => {
-                //     changeValuesReal()
-                // }, 500);
+               
 
             },
         });
