@@ -24,10 +24,12 @@
                 <div class="h2Wrapper container">
                     <h2 class="text-center">Kā <b><u>TU</u></b> sadalītu valsts <br>budžetu?</h2>
                 </div>
-                <div class="container pl-5 ">
+                <div class="container md-pl-5">
                     <p class="mb-4" id="bannerText">Ļoti daudzi diskutē par nepareizu budžeta dalīšanu, tāpēc dodam iespēju tieši Tev sadalīt budžetu pēc saviem uzskatiem!
                         Kā arī neaizmirsti dalīties ar rezultātiem sociālajos tīklos.</p>
-                    <a class="myButton btn" href="#chart-controls">Sadalīt</a>
+                    <div class="text-center text-lg-left mb-3">
+                        <a class="myButton btn mx-auto" href="#chart-controls">Sadalīt</a>
+                    </div>
                 </div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-5">
@@ -42,13 +44,13 @@
             <h3 class="text-center text-align-center my-auto py-2">Prognozes 2022.gadam</h3>
         </div>
 
-        <div class="d-flex justify-content-center flex-column flex-md-row align-items-center w-100 mt-5">
-            <div class="text-center mr-md-5" style="max-width: 218px;">
+        <div class="d-flex justify-content-between flex-column flex-md-row align-items-center w-100 mt-5 px-lg-5">
+            <div class="text-center" style="max-width: 218px;">
                 <img class="prognozeImgKarte" src="img/chart.svg" width="100%" max-height="150px">
                 <h4 class="text-center">IKP izaugsme</h4>
                 <p class="text-center">Prognoze: 3,1%</p>
             </div>
-            <div class="text-center mr-md-5" style="max-width: 171px;">
+            <div class="text-center" style="max-width: 171px;">
                 <img class="prognozeImg" src="img/currency-up.svg" width="100%">
                 <h4 class="text-center">vidējā inflācija</h4>
                 <p class="text-center">Prognoze: 2%</p>
@@ -62,15 +64,18 @@
     </div>
 
     <div class="container">
+        <div class="row d-flex justify-content-center ">
+            <div class="my-4 text-center col-md-8 col-lg-6 col-12">
+                <h3 class="py-3 h1Wrapper">Sadali valsts budžetu pats</h3>
+            </div>
+        </div>
+
         <div class="row mb-5">
             <div class="col-md-12 col-lg-6">
                 <div id=chart-controls class="w-100">
-                    <div class="h1Wrapper" style="width: fit-content;">
-                        <h3>Sadali valsts budžetu pats</h3>
-                    </div>
+
                     <table id="rangebox" class="w-100">
                         <tbody>
-                        <h5 class="HideOnLoad">Click boxes to edit labels</h5>
                         </tbody>
                     </table>
                 </div>
@@ -81,7 +86,7 @@
         </div>
     </div>
     <div class="container d-flex align-items-center flex-column">
-        <button class="myButton btn mb-3" onclick="populateUrl()" id="showTwitter">Iesniegt budžetu</button>
+        <button class="myButton btn text-white mb-3" onclick="populateUrl()" id="showTwitter">Iesniegt budžetu</button>
         <div id="twitterBlock" style="width:0; overflow: hidden;">
         </div>
         <div id="fb-share" class="css--display-none">
@@ -97,7 +102,6 @@
     <div class="container-fluid text-center">
         <div>
             <h5>Dizains un izstrāde<span><a href="https://kalmars.lv/?project=Budzets2022"><img src="img/kalmars-logo.svg" width="177" height="60"></a></span></h5>
-
         </div>
     </div>
 </footer>
