@@ -34,7 +34,7 @@ function init() {
     $(function () {
         global_slider = $(".js-range-slider").ionRangeSlider({
             type: "single", step: 1, min: 0, max: total, skin: "round", grid: "true", grid_num: 2, prefix: "€", postfix: "Milj", onChange: function (t) {
-                document.getElementById(t.input[0].id).value = t.from,
+                document.getElementById(t.input[0].id).value = t.from;
                 var e = document.getElementById(t.input[0].id);
                 e.value = parseInt(e.value), e.value < 0 ? e.value = 0 : e.value > total && (e.value = total);
                 var a = d3.select(e).attr("data-id"), n = oldValue[moving_id = a], r = e.value, l = (r - n) / (nb_sliders - 1);
