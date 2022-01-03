@@ -33,21 +33,18 @@ function init() {
     }
     $(function () {
         global_slider = $(".js-range-slider").ionRangeSlider({
-            type: "single", step: 1, min: 0, max: total, skin: "round", grid: "true", grid_num: 2, prefix: "€", postfix: "Milj", onChange: function (t) {//slider onchange
-
-                document.getElementById(t.input[0].id).value = t.from;//update hidden input field value
-                var e = document.getElementById(t.input[0].id);//e-hidden input field
-                e.value = parseInt(e.value), e.value < 0 ? e.value = 0 : e.value > total && (e.value = total);//place input field value in between bounds
+            type: "single", step: 1, min: 0, max: total, skin: "round", grid: "true", grid_num: 2, prefix: "€", postfix: "Milj", onChange: function (t) {
+                document.getElementById(t.input[0].id).value = t.from;
+                var e = document.getElementById(t.input[0].id);
+                e.value = parseInt(e.value), e.value < 0 ? e.value = 0 : e.value > total && (e.value = total);
                 var a = d3.select(e).attr("data-id"), n = oldValue[moving_id = a], r = e.value, l = (r - n) / (nb_sliders - 1);
-
-                //a-hidden input data-id n-old value of selected slider r-new value l-difference divided for each slider
                 d3.selectAll("#rangebox .range").each(function () {
                     var t = d3.select(this).attr("data-id"), e = this.value;
                     if (t != moving_id && e > l) {
                         var a = parseInt(e - l);
                         this.value = a, $("#" + t + "input").data("ionRangeSlider").update({ from: a }), oldValue[t] = this.value
                     }
-                }), oldValue[moving_id] = r, updatePieChart(), changeValuesReal(), updateInput()
+                }), oldValue[moving_id] = r, equalize(), updatePieChart(), changeValuesReal(), updateInput()
             }
         })
     }), d3.selectAll("#rangebox .range").each(function () {
@@ -79,21 +76,17 @@ function getData() {
 function getTotal() {
     var t = 0;
     return d3.selectAll("#rangebox .range").each(function () {
-
         t += parseInt(this.value)
-        // console.log(t);
     }), t
 }
 
 function equalize() {
-    // total = total - oldValue[1]
     var t = total - getTotal();
-    // console.log(t)
     if (0 != t) {
         var e = null, a = null, n = null, r = 9999, l = 0;
         d3.selectAll("#rangebox .range").each(function () {
             d3.select(this).attr("data-id") != moving_id && (parseInt(this.value) > parseInt(l) && (l = this.value, n = this), parseInt(this.value) < parseInt(r) && (r = this.value, a = this))
-        }), (e = t > 0 ? a : n) && (t > 0 ? (e.value = parseInt(e.value) + 1, t -= 1) : (e.value = parseInt(e.value) - 1, t += 1), oldValue[d3.select(e).attr("data-id")] = e.value, 0 != t)
+        }), (e = t > 0 ? a : n) && (t > 0 ? (e.value = parseInt(e.value) + 1, t -= 1) : (e.value = parseInt(e.value) - 1, t += 1), oldValue[d3.select(e).attr("data-id")] = e.value, 0 != t && equalize())
     }
 }
 
@@ -137,7 +130,6 @@ function updateLabels() {
 }
 
 value.html(range.attr("value")), range.on("input", function () {
-
     value.html(this.value), showHelp()
 }), $(document).ready(function () {
     init();
@@ -146,7 +138,7 @@ value.html(range.attr("value")), range.on("input", function () {
         changeValuesReal();
         for (let t = 0; t <= 10; t++) {
             let e = 0, a = 100;
-            $("#form-control-input" + t).on("input", function () {//number input on change
+            $("#form-control-input" + t).on("input", function () {
                 let n = $("#" + t + "input").data("ionRangeSlider"), r = $(this).prop("value");
                 r < e ? r = e : r > a && (r = a), n.update({ from: r }), $(".js-range-slider").data("ionRangeSlider").callOnChange()
             })
@@ -178,38 +170,35 @@ function arcTween(t) {
     }
 }
 
-function changetoEur() {//Slider label
+function changetoEur() {
     $(".irs-single").map(function () {
         let t = this.innerText, e = t.length, a = t.substring(1, e - 4);
-        //t= whole string of slider e=string length a=just the umber
         a = parseInt(a);
-        let n = "€" + (budget_total * a / 100 / 1e6).toLocaleString() + "Milj";//new string
+        let n = "€" + (budget_total * a / 100 / 1e6).toLocaleString() + "Milj";
         this.innerHTML = n
     }).get()
 }
 
-function changeMax() {//slider max label
+function changeMax() {
     $(".irs-max").map(function () {
         this.innerHTML = "€" + (budget_total / 1e6).toLocaleString() + "Milj"
     }).get()
 }
 
 function changeValuesReal() {
-    changetoEur()
-    changeMax()
+    changetoEur(), changeMax()
 }
 
 function updateInput() {
     for (let t = 0; t <= 10; t++) $("#form-control-input" + t).val($("#" + t + "input").val())
 }
 
-function splitEven() {//Unused
+function splitEven() {
     d3.selectAll("#rangebox .range").each(function () {
         var t = d3.select(this).attr("data-id"), e = this.value;
         if (t != moving_id && e > l) {
             var a = parseInt(e - l);
             this.value = a, $("#" + t + "input").data("ionRangeSlider").update({ from: a }), oldValue[t] = this.value
-
         }
     })
 }
