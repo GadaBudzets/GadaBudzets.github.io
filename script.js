@@ -1,7 +1,7 @@
 var nb_sliders = 11, moving_id = null, oldValue = [],
     names = ["Sociālā aizsardzība(SA)", "Dotācijas pašvaldībām(DP)", "Veselība(V)", "Izglītība,zinātne,sports un kultūra(IZSK)", "Aizsardzība(A)", "Sabiedriskā kārtība un drošība(SKD)", "Valsts parāda apkalpošana un iemaksas ES budžetā(VPA)", "Ekonomiskā darbība(ED)", "Pārējie izdevumi(PI)", "Valsts Prezidenta kanceleja(VPK)", "Vides aizsardzība(VA)"],
     shortnames = ["SA", "DP", "V", "IZSK", "A", "SKD", "VPA", "ED", "PI", "VPK", "VA"], defaultValues = [38, 16, 12, 9, 6, 5, 5, 5, 2, 1, 1], twitterValues = [], radius = 180, total = 100;
-let budget_total = 12439e6, margin = {top: 100, right: 100, bottom: 100, left: 175}, canvasWidth = 2 * radius + margin.left + margin.right, canvasHeight = 2 * radius + margin.top + margin.bottom, global_slider = null;
+let budget_total = 12439e6, margin = { top: 100, right: 100, bottom: 100, left: 175 }, canvasWidth = 2 * radius + margin.left + margin.right, canvasHeight = 2 * radius + margin.top + margin.bottom, global_slider = null;
 
 function populateUrl() {
     var t = "https://gadabudzets.lv?";
@@ -17,7 +17,7 @@ function populateUrl() {
 $(document).ready(function () {
     $(window).resize(function () {
         var t = $("#canvas").width();
-        $("#pie svg").width(t), $("#mainG").attr({transform: "translate(" + t / 2 + "," + canvasHeight / 2 + ")"}), $("#pie svg").width() <= 470 ? ($(".slices").css("transform", "scale(0.6)"), $(".labels").css("transform", "scale(0.6)"), $(".lines").css("transform", "scale(0.6)")) : ($(".slices").css("transform", "scale(1)"), $(".labels").css("transform", "scale(1)"), $(".lines").css("transform", "scale(1)"))
+        $("#pie svg").width(t), $("#mainG").attr({ transform: "translate(" + t / 2 + "," + canvasHeight / 2 + ")" }), $("#pie svg").width() <= 470 ? ($(".slices").css("transform", "scale(0.6)"), $(".labels").css("transform", "scale(0.6)"), $(".lines").css("transform", "scale(0.6)")) : ($(".slices").css("transform", "scale(1)"), $(".labels").css("transform", "scale(1)"), $(".lines").css("transform", "scale(1)"))
     })
 });
 var color = d3.scale.category10(), colors = ["#00545A", "#00757B", "#14263E", "#028C92", "#21ABB1", "#4F6179", "#16ACCA", "#2FC5E3", "#889AB2", "#8FD1DE", "#BDE1E8"], pi = Math.PI, pie = d3.layout.pie().value(function (t) {
@@ -33,18 +33,21 @@ function init() {
     }
     $(function () {
         global_slider = $(".js-range-slider").ionRangeSlider({
-            type: "single", step: 1, min: 0, max: total, skin: "round", grid: "true", grid_num: 2, prefix: "€", postfix: "Milj", onChange: function (t) {
-                document.getElementById(t.input[0].id).value = t.from;
-                var e = document.getElementById(t.input[0].id);
-                e.value = parseInt(e.value), e.value < 0 ? e.value = 0 : e.value > total && (e.value = total);
+            type: "single", step: 1, min: 0, max: total, skin: "round", grid: "true", grid_num: 2, prefix: "€", postfix: "Milj", onChange: function (t) {//slider onchange
+
+                document.getElementById(t.input[0].id).value = t.from;//update hidden input field value
+                var e = document.getElementById(t.input[0].id);//e-hidden input field
+                e.value = parseInt(e.value), e.value < 0 ? e.value = 0 : e.value > total && (e.value = total);//place input field value in between bounds
                 var a = d3.select(e).attr("data-id"), n = oldValue[moving_id = a], r = e.value, l = (r - n) / (nb_sliders - 1);
+
+                //a-hidden input data-id n-old value of selected slider r-new value l-difference divided for each slider
                 d3.selectAll("#rangebox .range").each(function () {
                     var t = d3.select(this).attr("data-id"), e = this.value;
                     if (t != moving_id && e > l) {
                         var a = parseInt(e - l);
-                        this.value = a, $("#" + t + "input").data("ionRangeSlider").update({from: a}), oldValue[t] = this.value
+                        this.value = a, $("#" + t + "input").data("ionRangeSlider").update({ from: a }), oldValue[t] = this.value
                     }
-                }), oldValue[moving_id] = r, equalize(), updatePieChart(), changeValuesReal(), updateInput()
+                }), oldValue[moving_id] = r, updatePieChart(), changeValuesReal(), updateInput()
             }
         })
     }), d3.selectAll("#rangebox .range").each(function () {
@@ -56,7 +59,7 @@ function init() {
 
 function showHelp() {
     $(document).ready(function () {
-        $("h5").css({opacity: ".4"}), $("#pieImage").css({display: "none"})
+        $("h5").css({ opacity: ".4" }), $("#pieImage").css({ display: "none" })
     })
 }
 
@@ -69,24 +72,28 @@ function seteditboxcolor() {
 function getData() {
     var t = [];
     return d3.selectAll("#rangebox .range").each(function () {
-        t.push({label: d3.select(this.parentNode.parentNode).select("td:first-child").text(), value: this.value})
+        t.push({ label: d3.select(this.parentNode.parentNode).select("td:first-child").text(), value: this.value })
     }), t
 }
 
 function getTotal() {
     var t = 0;
     return d3.selectAll("#rangebox .range").each(function () {
+
         t += parseInt(this.value)
+        // console.log(t);
     }), t
 }
 
 function equalize() {
+    // total = total - oldValue[1]
     var t = total - getTotal();
+    // console.log(t)
     if (0 != t) {
         var e = null, a = null, n = null, r = 9999, l = 0;
         d3.selectAll("#rangebox .range").each(function () {
             d3.select(this).attr("data-id") != moving_id && (parseInt(this.value) > parseInt(l) && (l = this.value, n = this), parseInt(this.value) < parseInt(r) && (r = this.value, a = this))
-        }), (e = t > 0 ? a : n) && (t > 0 ? (e.value = parseInt(e.value) + 1, t -= 1) : (e.value = parseInt(e.value) - 1, t += 1), oldValue[d3.select(e).attr("data-id")] = e.value, 0 != t && equalize())
+        }), (e = t > 0 ? a : n) && (t > 0 ? (e.value = parseInt(e.value) + 1, t -= 1) : (e.value = parseInt(e.value) - 1, t += 1), oldValue[d3.select(e).attr("data-id")] = e.value, 0 != t)
     }
 }
 
@@ -130,17 +137,18 @@ function updateLabels() {
 }
 
 value.html(range.attr("value")), range.on("input", function () {
+
     value.html(this.value), showHelp()
 }), $(document).ready(function () {
     init();
     var t = $("#canvas").width();
-    $("#pie svg").width(t), $("#mainG").attr({transform: "translate(" + t / 2 + "," + canvasHeight / 2 + ")"}), $("#pie svg").width() < 470 ? ($(".slices").css("transform", "scale(0.6)"), $(".labels").css("transform", "scale(0.6)"), $(".lines").css("transform", "scale(0.6)")) : ($(".slices").css("transform", "scale(1)"), $(".labels").css("transform", "scale(1)"), $(".lines").css("transform", "scale(1)")), setTimeout(() => {
+    $("#pie svg").width(t), $("#mainG").attr({ transform: "translate(" + t / 2 + "," + canvasHeight / 2 + ")" }), $("#pie svg").width() < 470 ? ($(".slices").css("transform", "scale(0.6)"), $(".labels").css("transform", "scale(0.6)"), $(".lines").css("transform", "scale(0.6)")) : ($(".slices").css("transform", "scale(1)"), $(".labels").css("transform", "scale(1)"), $(".lines").css("transform", "scale(1)")), setTimeout(() => {
         changeValuesReal();
         for (let t = 0; t <= 10; t++) {
             let e = 0, a = 100;
-            $("#form-control-input" + t).on("input", function () {
+            $("#form-control-input" + t).on("input", function () {//number input on change
                 let n = $("#" + t + "input").data("ionRangeSlider"), r = $(this).prop("value");
-                r < e ? r = e : r > a && (r = a), n.update({from: r}), $(".js-range-slider").data("ionRangeSlider").callOnChange()
+                r < e ? r = e : r > a && (r = a), n.update({ from: r }), $(".js-range-slider").data("ionRangeSlider").callOnChange()
             })
         }
     }, 500)
@@ -170,35 +178,38 @@ function arcTween(t) {
     }
 }
 
-function changetoEur() {
+function changetoEur() {//Slider label
     $(".irs-single").map(function () {
         let t = this.innerText, e = t.length, a = t.substring(1, e - 4);
+        //t= whole string of slider e=string length a=just the umber
         a = parseInt(a);
-        let n = "€" + (budget_total * a / 100 / 1e6).toLocaleString() + "Milj";
+        let n = "€" + (budget_total * a / 100 / 1e6).toLocaleString() + "Milj";//new string
         this.innerHTML = n
     }).get()
 }
 
-function changeMax() {
+function changeMax() {//slider max label
     $(".irs-max").map(function () {
         this.innerHTML = "€" + (budget_total / 1e6).toLocaleString() + "Milj"
     }).get()
 }
 
 function changeValuesReal() {
-    changetoEur(), changeMax()
+    changetoEur()
+    changeMax()
 }
 
 function updateInput() {
     for (let t = 0; t <= 10; t++) $("#form-control-input" + t).val($("#" + t + "input").val())
 }
 
-function splitEven() {
+function splitEven() {//Unused
     d3.selectAll("#rangebox .range").each(function () {
         var t = d3.select(this).attr("data-id"), e = this.value;
         if (t != moving_id && e > l) {
             var a = parseInt(e - l);
-            this.value = a, $("#" + t + "input").data("ionRangeSlider").update({from: a}), oldValue[t] = this.value
+            this.value = a, $("#" + t + "input").data("ionRangeSlider").update({ from: a }), oldValue[t] = this.value
+
         }
     })
 }
